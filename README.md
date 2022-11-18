@@ -132,6 +132,145 @@ La instalación de Ubuntu Server 22.04 LTS en Raspberry Pi la realizaremos desde
 
 ## Instalación de ASTERISK
 
+Instalación de ASTERISK
+
+```
+sudo apt-get install asterisk -y
+```
+
+Ver versión instalada de ASTERISK
+
+```
+asterisk -V
+```
+
+```
+---> Asterisk 18.10.0~dfsg+~cs6.10.40431411-2
+```
+
+Localizar paquetes necesarios para ASTERISK
+
+```
+apt search ASTERISK
+```
+Paquetes localizados que son necesarios
+
+```
+asterisk-core-sounds-es
+asterisk-core-sounds-es-g722
+asterisk-core-sounds-es-gsm
+asterisk-core-sounds-es-wav
+asterisk-prompt-es
+```
+
+Instalación de paquetes
+
+```
+sudo apt-get install asterisk-core-sounds-es asterisk-core-sounds-es-g722 asterisk-core-sounds-es-gsm asterisk-core-sounds-es-wav asterisk-prompt-es -y
+```
+
+Comprobamos los paquetes instalados 
+
+```
+dpkg -l asterisk*
+```
+
+```
+||/ Nombre                                        Versión                           Arquitectura Descripción
++++-=============================================-=================================-============-=========================================
+ii  asterisk                                      1:18.10.0~dfsg+~cs6.10.40431411-2 amd64        Open Source Private Branch Exchange (PBX)
+un  asterisk-abi-1fb7f5c06d7a2052e38d021b3d8ca151 <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+ii  asterisk-config                               1:18.10.0~dfsg+~cs6.10.40431411-2 all          Configuration files for Asterisk
+un  asterisk-config-custom                        <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+ii  asterisk-core-sounds-en                       1.6.1-1                           all          asterisk PBX sound files - US English
+un  asterisk-core-sounds-en-g722                  <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+ii  asterisk-core-sounds-en-gsm                   1.6.1-1                           all          asterisk PBX sound files - en-us/gsm
+un  asterisk-core-sounds-en-wav                   <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+ii  asterisk-core-sounds-es                       1.6.1-1                           all          asterisk PBX sound files - Spanish
+ii  asterisk-core-sounds-es-g722                  1.6.1-1                           all          asterisk PBX sound files - es-mx/g722
+ii  asterisk-core-sounds-es-gsm                   1.6.1-1                           all          asterisk PBX sound files - es-mx/gsm
+ii  asterisk-core-sounds-es-wav                   1.6.1-1                           all          asterisk PBX sound files - es-mx/wav
+un  asterisk-dahdi                                <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-dev                                  <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-doc                                  <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+ii  asterisk-modules                              1:18.10.0~dfsg+~cs6.10.40431411-2 amd64        loadable modules for the Asterisk PBX
+ii  asterisk-moh-opsound-gsm                      2.03-1.1                          all          asterisk extra sound files - English/gsm
+un  asterisk-ooh323                               <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-opus                                 <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-prompt-en                            <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-prompt-en-us                         <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-prompt-es                            <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-prompt-es-mx                         <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-sounds-main                          <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-voicemail                            <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-voicemail-imapstorage                <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-voicemail-odbcstorage                <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-vpb                                  <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+```
+
+Comprobamos el estado de los servicios
+
+```
+systemctl status asterisk.service
+```
+
+Nos tiene que devolver el siguiente error
+
+```
+nov 18 19:11:38 alejandroalsa asterisk[15885]: radcli: rc_read_config: rc_read_config: can't open /etc/radiusclient-ng/radiusclient.conf: No such file or directory
+```
+Esto sucede porque ASTERISK por defecto tiene configurado que el archivo 'radiusclient.conf' se encuentra almacenado en el directorio '/etc/radiusclient-ng/' si hacemos una pequeña búsqueda podemos encontrar el archivo 'radiusclient.conf' en '/etc/radcli/' por lo que realizaremos algunos cambios:
+
+Antes de hacer cualquier cambio realizaremos una copia de seguridad
+
+```
+sudo cp /etc/asterisk/cel.conf /etc/asterisk/cel.conf.copy
+```
+
+```
+sudo cp /etc/asterisk/cdr.conf /etc/asterisk/cdr.conf.copy
+```
+Procedemos a editar el archivo donde está almacenando la ruta incorrecta
+
+```
+sudo nano /etc/asterisk/cel.conf
+```
+
+Nos dirigiremos al final del archivo a la zona de `[radius]` allí modificaremos el archivo
+
+```
+Antes -> ;radiuscfg => /usr/local/etc/radiusclient-ng/radiusclient.conf
+
+Ahora -> radiuscfg => /etc/radcli/radiusclient.conf
+```
+
+Editamos el otro archivo 
+
+```
+sudo nano /etc/asterisk/cdr.conf
+```
+
+Nos dirigiremos al final del archivo a la zona de `[radius]` (comentada) allí modificaremos el archivo
+
+```
+Antes -> ;[radius]
+Antes -> ;radiuscfg => /usr/local/etc/radiusclient-ng/radiusclient.conf
+
+Ahora -> [radius]
+Ahora -> radiuscfg => /etc/radcli/radiusclient.conf
+```
+
+Reiniciamos el servicio y ya no nos saldrá el error
+
+```
+sudo systemctl restart asterisk.service
+```
+
+Si listamos el directorio de `/etc/asterisk/` nos daremos cuenta de que saldrán un montón archivos, nuestros por ahora modificaremos dos: `extensions.conf` y `sip.conf`
+
+* **sip.conf** Permite definir los canales SIP (peers), tanto para llamadas entrantes como salientes.
+* **extensions.conf** Es el que define el comportamiento que va a tener una llamada en nuestra centralita (qué reglas rigen su enrutamiento o qué aplicaciones van a ejecutar).
+
 ## Configuración de ASTERISK
 
 ## Token
