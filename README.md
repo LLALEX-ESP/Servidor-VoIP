@@ -95,6 +95,36 @@ La instalación de Ubuntu Server 22.04 LTS en Raspberry Pi la realizaremos desde
 
 ## Configuración Ubuntu Server
 
+* **IP Privada Fija** 
+  * El archivo que tendremos que editar será `50-installer-config.yaml`, la ruta del archivo es la siguiente: 
+
+    `sudo nano /etc/netplan/00-installer-config.yaml`
+    
+  * El archivo de fábrica tiene el siguiente formato:
+    ```
+    network:
+        ethernets:
+          enp0s3:
+            dhcp4: true
+        version: 2
+    ```
+   * El archivo modificado para obtener una IP Estática tiene el siguiente formato:
+     ```
+     network:
+         ethernets :
+           ######:             #Tarjeta de Red.
+             dhcp4: no
+             addresses: [###.###.###.###/##]
+             gateway4: ###.###.###.###
+             nameservers:
+               addresses: [8.8.8.8, 1.1.1.1]
+         version: 2
+      ```
+    * Después de editar el fichero tendremos que aplicar los cambios, para ello emplearemos el siguiente comando:
+      ```
+      sudo netplan apply
+      ```
+
 ## Instalación de ASTERISK
 
 ## Configuración de ASTERISK
