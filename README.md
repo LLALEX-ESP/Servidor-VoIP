@@ -46,7 +46,7 @@ El hardware que se utilizara para este proyecto es el siguiente:
     * 2 x LAN 10/100M
     * 1 x Gigabit Ethernet 10/100/1000M
 
-* **Rasbery Pi**: [Raspberry Pi 4 Modelo B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/?variant=raspberry-pi-4-model-b-8gb)
+* **Raspberry Pi**: [Raspberry Pi 4 Modelo B](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/?variant=raspberry-pi-4-model-b-8gb)
   * *Procesador*: Broadcom BCM2711, quad-core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz.
   * *RAM*: 8GB LPDDR4 SDRAM
   * *Conectividad*: WiFi Dual Band 2.4 GHz y 5.0 GHz IEEE 802.11b/g/n/ac, Bluetooth 5.0, BLE
