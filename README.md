@@ -2,7 +2,7 @@
 
 ![IMG](https://www.asterisk.org/wp-content/uploads/asterisk-logo-fb-share.png)
 
-## Indice
+## Índice
 
 * Objetivos [📌](#objetivos)
 * Hardware [📌](#hardware)
