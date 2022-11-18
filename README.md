@@ -38,7 +38,7 @@ El hardware que se utilizara para este proyecto es el siguiente:
   * *Procesador*: MediaTek MT621A a 800 MHz
   * *Memoria Interna*: 16MB
   * *Memoria RAM*: 128MB
-  * *Antenas con tecnología LNA* (Low Noise Amplifier)
+  * *Antenas con tecnología [LNA](https://www.digikey.com/es/blog/why-a-good-lna-is-key-to-a-viable-antenna-front-end)* (Low Noise Amplifier)
   * *Ancho de Banda*:
     * 2.4G: 300M
     * 5G: 867M
