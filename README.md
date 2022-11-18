@@ -61,6 +61,38 @@ En los dispositivos móviles y en el router podemos utilizar el que nosotros que
 
 ## Instalación Ubuntu Server 22.04 LTS en Raspberry-Pi
 
+La instalación de Ubuntu Server 22.04 LTS en Raspberry Pi la realizaremos desde 0, estos son los pasos a seguir:
+
+
+* **Descarga de Raspberry Pi Imager** La instalación del S.O lo podemos hacer directamente descargadnos una ISO específica para Raspberry Pi en la página oficial de Ubuntu, pero esta puede llegar a dar problemas, por lo que descargaremos la herramienta de instalación de imágenes de Raspberry Pi en la que podremos instalar el S.O y preconfigurar algunos ajustes. [Raspberry Pi Imager](https://www.raspberrypi.com/software)
+
+![IMG_1](https://user-images.githubusercontent.com/67869168/202757952-10318814-88cd-4af5-a384-55e709e240a7.png)
+
+* **Seleccion del S.O** Una vez instalada la herramienta el primer paso será seleccionar el S.O que instalaremos, para ello seguiremos la siguiente ruta:
+```CHOOSE OS``` -> ```Other general-purpose OS``` -> ```Ubuntu``` -> ```Ubuntu Server 22.10 (64-bit)```
+
+![IMG_2](https://user-images.githubusercontent.com/67869168/202758501-46fb4c46-41d2-453c-b8e6-01741294e146.png)
+![IMG_3](https://user-images.githubusercontent.com/67869168/202758533-407baff1-0518-4715-833e-a8ba41c31e24.png)
+
+* **Preconfiguracion** Al utilizar la herramienta de Raspberry Pi Imager nos da la configuración de realizar algunas configuraciones en el S.O antes de iniciarlo.
+
+ `Hostname`
+ `Enable SSh`
+ 
+ ![IMG_4](https://user-images.githubusercontent.com/67869168/202759463-3e855a70-f8b0-40f0-b8e0-59afeb29761d.png)
+ 
+ `Set username and password`
+ 
+ ![IMG_5](https://user-images.githubusercontent.com/67869168/202759547-34d5b7c5-8809-48ea-b87b-d290ee5abdb9.png)
+ 
+ `Set locale settings`
+ 
+ ![IMG_6](https://user-images.githubusercontent.com/67869168/202759664-2d30389c-0db0-4ae2-b5d2-67968403c1d4.png)
+ 
+ * **Instalacion del S.O** Después de preconfigurar el S.O podemos empezar a instalarlo clicando sobre `WRITE`, el programa comenzara a instalar el S.O, este proceso durara aproximadamente 10 Minutos.
+ 
+ ![IMG_7](https://user-images.githubusercontent.com/67869168/202759916-084413c9-cee7-4b48-86b2-41a3b8e0d41e.png)
+
 ## Configuración Ubuntu Server
 
 ## Instalación de ASTERISK
