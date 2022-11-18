@@ -59,6 +59,11 @@ En los dispositivos móviles y en el router podemos utilizar el que nosotros que
 
 ## Red
 
+**Configuración de la red**
+
+![LAN](https://user-images.githubusercontent.com/67869168/202767531-d10c0b4d-e803-4cda-ad2e-abc6502b72fe.png)
+
+
 ## Instalación Ubuntu Server 22.04 LTS en Raspberry-Pi
 
 La instalación de Ubuntu Server 22.04 LTS en Raspberry Pi la realizaremos desde 0, estos son los pasos a seguir:
