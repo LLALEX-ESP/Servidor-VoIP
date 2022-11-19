@@ -273,6 +273,128 @@ Si listamos el directorio de `/etc/asterisk/` nos daremos cuenta de que saldrán
 
 ## Configuración de ASTERISK
 
+Copia de Seguridad
+
+```
+sudo cp /etc/asterisk/sip.conf /etc/asterisk/sip.conf.copy
+```
+
+```
+sudo vi /etc/asterisk/sip.conf
+
+:g/^\s*;/d
+
+:g/^$/d
+
+```
+
+```
+[general]
+context=public                  ; Default context for incoming calls. Defaults to 'default'
+allowoverlap=no                 ; Disable overlap dialing support. (Default is yes)
+udpbindaddr=0.0.0.0             ; IP address to bind UDP listen socket to (0.0.0.0 binds to all)
+tcpenable=no                    ; Enable server for incoming TCP connections (default is no)
+tcpbindaddr=0.0.0.0             ; IP address for TCP server to bind to (0.0.0.0 binds to all interfaces)
+transport=udp                   ; Set the default transports.  The order determines the primary default transport.
+srvlookup=yes                   ; Enable DNS SRV lookups on outbound calls
+
+[authentication]
+
+[basic-options](!)                ; a template
+        dtmfmode=rfc2833
+        context=from-office
+        type=friend
+
+[natted-phone](!,basic-options)   ; another template inheriting basic-options
+        directmedia=no
+        host=dynamic
+
+[public-phone](!,basic-options)   ; another template inheriting basic-options
+        directmedia=yes
+
+[my-codecs](!)                    ; a template for my preferred codecs
+        disallow=all
+        allow=ilbc
+        allow=g729
+        allow=gsm
+        allow=g723
+        allow=ulaw
+
+[ulaw-phone](!)                   ; and another one for ulaw-only
+        disallow=all
+        allow=ulaw
+```
+
+```
+qualify=yes                     ; Permite monitorear la conexción con los teléfonos VoIP.
+language=es                     ; Idioma por defecto para todos los usuarios.
+disallow=all                    ; Desactivar todos los codificadores.
+allow=ulaw                      ; Permitir codificadores en orden de preferencia.
+```
+
+```
+[usuario](!)                     ; Plantilla con la configuración que vamos a utilizar
+type=friend                      ; El usuario con esta extensión podra enviar y recibir llanadas
+host=dynamic                     ; Cualquier equipo con cualquier IP selpodrá registrar como cliente
+context=alejandroalsa            ; Contexto predefinido (ver ->extensions.conf)
+```
+
+```
+; Extension 01
+[ext_01](usuario)
+username=usu_ext_01
+secret=usu_ext_01
+port=5061
+```
+
+```
+; Extension 02
+[ext_02](usuario)
+username=usu_ext_02
+secret=usu_ext_02
+port=5061
+```
+
+```
+sudo systemctl restart asterisk.service
+```
+```
+sudo asterisk -rvvvv
+```
+```
+module load chan_sip.so
+```
+```
+sip show peers
+sip show users
+```
+
+```
+[Nov 18 23:54:41] NOTICE[18359]: chan_sip.c:25007 handle_response_peerpoke: Peer 'ext_01' is now Reachable. (1ms / 2000ms)
+    -- Unregistered SIP 'ext_01'
+    -- Registered SIP 'ext_01' at 192.168.1.100:38089
+    -- Unregistered SIP 'ext_01'
+```
+
+```
+Registered SIP 'ext_01' at 192.168.1.100:38089
+```
+
+```
+Name/username             Host                                    Dyn Forcerport Comedia    ACL Port     Status      Description                      
+ext_01/usu_ext_01         192.168.1.100                            D  Auto (No)  No             38089    OK (2 ms)                                    
+ext_02/usu_ext_02         192.168.1.141                            D  Auto (No)  No             38699    OK (3 ms)                                    
+2 sip peers [Monitored: 2 online, 0 offline Unmonitored: 0 online, 0 offline]
+```
+
+```
+[alejandroalsa]
+exten => 01,1,Dial(SIP/ext_01)
+exten => 02,1,Dial(SIP/ext_02)
+```
+
+
+
 ## Token
 
 ## Descarga
