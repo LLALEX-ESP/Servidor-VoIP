@@ -279,15 +279,19 @@ Copia de Seguridad
 sudo cp /etc/asterisk/sip.conf /etc/asterisk/sip.conf.copy
 ```
 
+Si abrimos el fichero de `sip.conf` nos daremos cuenta de que es un archivo muy extenso, por lo que utilizaremos el ditor *vi* para eliminar las lineas comentadas y lineas en blanco
+
 ```
 sudo vi /etc/asterisk/sip.conf
+```
 
+```
 :g/^\s*;/d
 
 :g/^$/d
 
 ```
-
+El archivo se nos tiene que quedar de la siguiente forma:
 ```
 [general]
 context=public                  ; Default context for incoming calls. Defaults to 'default'
@@ -325,12 +329,16 @@ srvlookup=yes                   ; Enable DNS SRV lookups on outbound calls
         allow=ulaw
 ```
 
+Despues en el apartado de `[general]` anadiremos las siguientes lineas
+
 ```
 qualify=yes                     ; Permite monitorear la conexción con los teléfonos VoIP.
 language=es                     ; Idioma por defecto para todos los usuarios.
 disallow=all                    ; Desactivar todos los codificadores.
 allow=ulaw                      ; Permitir codificadores en orden de preferencia.
 ```
+
+Por ultimo y finalizar la configuracion basica anadiremos a un usuario
 
 ```
 [usuario](!)                     ; Plantilla con la configuración que vamos a utilizar
@@ -339,6 +347,7 @@ host=dynamic                     ; Cualquier equipo con cualquier IP selpodrá r
 context=alejandroalsa            ; Contexto predefinido (ver ->extensions.conf)
 ```
 
+Despues de ello crearemos las extensiones
 ```
 ; Extension 01
 [ext_01](usuario)
@@ -355,29 +364,36 @@ secret=usu_ext_02
 port=5061
 ```
 
+Asterisk funcioan atraves de usuario y extensiones, es decir, nosotros creamos un usuario llamemoslo `X` y lo agregamos a la extension `01`, despues creamos otros usuatio llamemoslo `Y` y lo agregamos a la extension `02`, para que el usuario `X` llame al usuario `Y` tendra que marcar su numero de extencion es decir `02`.
+
+Al terminar de editar los fichero es importante comprobar que los ficheros editatos pertenezcan al grupo y usuario `asterisk`
+
+```
+sudo chown asteris:asterisk sip.cof
+```
+
+Depues de terminar reiniciaremos el servicio de Asterisk
 ```
 sudo systemctl restart asterisk.service
 ```
+
+Otros de los pasoso fundamentales es la consola que nos porporciona Asterisk, en ella podemos ver en tiempo real todos los procesos que se lleva a cabo en el software y de tener una vista mas amplia de todos los ajustes, modificaciones, usuarios, extensiones, y funciones que agregamos al software, para entrar en la consola introduciremos el siguiente comando:
 ```
 sudo asterisk -rvvvv
 ```
+Antes de comenzar con los comando que hay asiciados es importante activar el modulo de `chan_sip.so`, para poder utlizar los comandos
+
 ```
 module load chan_sip.so
 ```
+
+Una vez echo ya podremos utilizarlos.
+
+En este caso listamos las extensiones y los usuarios que hay asociados a ellas
+
 ```
 sip show peers
 sip show users
-```
-
-```
-[Nov 18 23:54:41] NOTICE[18359]: chan_sip.c:25007 handle_response_peerpoke: Peer 'ext_01' is now Reachable. (1ms / 2000ms)
-    -- Unregistered SIP 'ext_01'
-    -- Registered SIP 'ext_01' at 192.168.1.100:38089
-    -- Unregistered SIP 'ext_01'
-```
-
-```
-Registered SIP 'ext_01' at 192.168.1.100:38089
 ```
 
 ```
@@ -386,6 +402,13 @@ ext_01/usu_ext_01         192.168.1.100                            D  Auto (No) 
 ext_02/usu_ext_02         192.168.1.141                            D  Auto (No)  No             38699    OK (3 ms)                                    
 2 sip peers [Monitored: 2 online, 0 offline Unmonitored: 0 online, 0 offline]
 ```
+Por ultimo y para finalizar la configuracion tendremos que agregar los usuario a las extensiones en el archivo `/etc/asterisk/extensions.conf`, no sin antes realizar una copia de seguridad.
+
+```
+sudo cp extensions.conf extensions.conf.copy
+```
+
+En el fichero `extensions.conf` agregaremos el ambito `[alejandroalsa]` y las extensiones a los usuarios.
 
 ```
 [alejandroalsa]
@@ -393,7 +416,52 @@ exten => 01,1,Dial(SIP/ext_01)
 exten => 02,1,Dial(SIP/ext_02)
 ```
 
+En este punto la configuracion estara finalizada.
 
+### Instalacion Zoiper
+
+Para poder empezar a utilizar el servicio necesitamos instalar en los dispositivos que utlizaremos como terminal telefonica el programa de Zoiper que es software multiplataforma (funciona con Windows, Linux, MAC, iPod Touch, iPad, iPhone, tablets y Android), diseñado para trabajar con sus sistemas de comunicación IP basado en el protocolo SIP.
+
+Para su instalacion en PC nos tendremos que dirigir a su pagina web oficial y descargarnos el programa. [DESCARGAR](https://www.zoiper.com/en/voip-softphone/download/current)
+
+### Configuracion de Zoiper
+
+Cuando finalizemos la instalacion nos encontraremos con la siguiente pantalla:
+
+![IMG_10](https://user-images.githubusercontent.com/67869168/202850903-a868e230-fccf-41ac-80e9-c87d3ab45764.png)
+
+Seleccionaremos la opcion de `Continue as a Free user`.
+
+En la segunda pantall tendremos que introducir el usuario, direccion ip del servidor y contrasena
+
+![IMG_11](https://user-images.githubusercontent.com/67869168/202850974-9dc79d43-9f1a-403c-8f0b-7c460fc8d85e.png)
+
+```
+usuario@direccionip
+
+password
+```
+
+En la siguiente pantalla seleccionaremos la misma IP
+
+![IMG_12](https://user-images.githubusercontent.com/67869168/202851000-74155b69-c537-4be9-b3b8-b7c02b13eb91.png)
+
+Por ultimo seleccionamore la opcion de `Authentication and Outbound proxy` donde introduciremos nuestro usuario
+
+![IMG_13](https://user-images.githubusercontent.com/67869168/202851033-f5bd21b3-86ee-4ef4-8c1c-e79000e68ac3.png)
+
+En la siguiente ventana conectara con el servidor donde tiene que salir las siguites opciones
+
+![IMG_13](https://user-images.githubusercontent.com/67869168/202851071-7ec3a0ff-644e-4032-99e8-242f46297a4d.png)
+
+* **SIP TLS** Esta es una opcion PRO
+* **SIP TCP** No esta configurado
+* **SIP UDP** Encontrado
+* **IAX UDP** No esta configurado
+
+Despues ya podremos empeazar a utlizar la herramienta y relizar la primera llamada
+
+![IMG_14](https://user-images.githubusercontent.com/67869168/202851153-f508a93d-f735-4b15-a9ec-d274f6635be3.png)
 
 ## Token
 
