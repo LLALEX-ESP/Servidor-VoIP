@@ -1,4 +1,4 @@
-# Servidor VoIP ASTERISK Ubuntu Server 22.04 LTS Raspberry-Pi
+# Servidor VoIP ASTERISK Ubuntu Server 22.04 LTS Raspberry Pi
 
 ![IMG](https://www.asterisk.org/wp-content/uploads/asterisk-logo-fb-share.png)
 
