@@ -10,7 +10,7 @@
 * Instalación Ubuntu Server 22.04 LTS en Raspberry-Pi [📌](#instalación-ubuntu-server-22.04-lts-en-raspberry-pi)
 * Configuración Ubuntu Server [📌](#configuración-ubuntu-server)
 * Instalación de ASTERISK [📌](#instalación-de-asterisk)
-* Configuración de ASTERISK [📌](#configuracin-de-asterisk)
+* Configuración de ASTERISK [📌](#configuración-de-asterisk)
 * Descarga [📌](#descarga)
 
 ## Objetivos
