@@ -10,8 +10,7 @@
 * Instalación Ubuntu Server 22.04 LTS en Raspberry-Pi [📌](#instalación-ubuntu-server-22.04-lts-en-raspberry-pi)
 * Configuración Ubuntu Server [📌](#configuración-ubuntu-server)
 * Instalación de ASTERISK [📌](#instalación-de-asterisk)
-* Configuración de ASTERISK [📌](#configuracion-de-asterisk)
-* Token [📌](#token)
+* Configuración de ASTERISK [📌](#configuracin-de-asterisk)
 * Descarga [📌](#descarga)
 
 ## Objetivos
@@ -463,7 +462,8 @@ Despues ya podremos empeazar a utlizar la herramienta y relizar la primera llama
 
 ![IMG_14](https://user-images.githubusercontent.com/67869168/202851153-f508a93d-f735-4b15-a9ec-d274f6635be3.png)
 
-## Token
-
 ## Descarga
 
+```
+git clone https://github.com/LLALEX-ESP/Servidor-VoIP.git
+``` 
