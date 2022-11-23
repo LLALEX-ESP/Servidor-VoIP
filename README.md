@@ -21,12 +21,7 @@ En este proyecto se tiene como objetivo 3 funciones:
 
 ⏩  **2º** Instalación de un Ubuntu Server 22.04 LTS en una Raspberry-Pi: Con esta simularemos el servidor y es en la que instalaremos el servicio de VoIP.
 
-⏩  **3º** Instalación de un servicio VoIP: Voz sobre protocolo de internet o Voz por protocolo de internet, también llamado voz sobre IP, voz IP, vozIP o VoIP, es un conjunto de recursos que hacen posible que la señal de voz viaje a través de Internet empleando el protocolo IP. Para su instalación y configuración utilizaremos el software de [Asterisk](https://www.asterisk.org/), un programa de software libre que proporciona funcionalidades de una central telefónica. Configuraremos las siguientes funciones:
-
-* **Configurar Servidor VoIP**
-* **Reproducir un fichero de audio**
-* **Grabar un audio para reproducirlo**
-
+⏩  **3º** Instalación de un servicio VoIP: Voz sobre protocolo de internet o Voz por protocolo de internet, también llamado voz sobre IP, voz IP, vozIP o VoIP, es un conjunto de recursos que hacen posible que la señal de voz viaje a través de Internet empleando el protocolo IP. Para su instalación y configuración utilizaremos el software de [Asterisk](https://www.asterisk.org/), un programa de software libre que proporciona funcionalidades de una central telefónica.
 
 ## Hardware
 
@@ -131,6 +126,23 @@ La instalación de Ubuntu Server 22.04 LTS en Raspberry Pi la realizaremos desde
 
 ## Instalación de ASTERISK
 
+### ¿Qué es Asterisk?
+
+* Es un software libre y de código abierto
+* Servidor de comunicaciones
+  * Sistemas IP PBX
+  * Puerta de enlace VoIP
+  * Servidores de conferencia
+* Principal ventaja
+  * Incluye todas las funcionalidades de las más costosas alternativas de código cerrado.
+  * Correo de voz,llamada en conferencia, respuesta interactiva de voz (IVR) y distribución automática de llamadas.
+
+### Definiciones
+
+* **PBX (Private Branch Exchange)** Permite la interconexión de teléfonos para realizar llamadas entre si e incluso acceder a comunicaciones fuera de la misma conectando a un proveedor de VolP.
+* **Softphone** Aplicación que implemente un terminal telefónico de uno o varios protocolos de VolP en un PC.
+* **VoIP (Voice over IP)** Es una tecnología que proporciona la comunicación de voz en forma digital, sobre Protocolo de Internet (IP), en lugar de enviarla en forma analógica, como utiliza la telefonía tradicional.
+
 Instalación de ASTERISK
 
 ```
@@ -144,7 +156,7 @@ asterisk -V
 ```
 
 ```
----> Asterisk 18.10.0~dfsg+~cs6.10.40431411-2
+---> Asterisk 18.14.0~dfsg+~cs6.10.40431411-2
 ```
 
 Localizar paquetes necesarios para ASTERISK
@@ -229,6 +241,7 @@ sudo cp /etc/asterisk/cel.conf /etc/asterisk/cel.conf.copy
 ```
 sudo cp /etc/asterisk/cdr.conf /etc/asterisk/cdr.conf.copy
 ```
+
 Procedemos a editar el archivo donde está almacenando la ruta incorrecta
 
 ```
@@ -278,7 +291,7 @@ Copia de Seguridad
 sudo cp /etc/asterisk/sip.conf /etc/asterisk/sip.conf.copy
 ```
 
-Si abrimos el fichero de `sip.conf` nos daremos cuenta de que es un archivo muy extenso, por lo que utilizaremos el ditor *vi* para eliminar las lineas comentadas y lineas en blanco
+Si abrimos el fichero de `sip.conf` nos daremos cuenta de que es un archivo muy extenso, ya que incluye ejemplos preestablecidos y su documentación, por lo que utilizaremos el ditor *vi* para eliminar las lineas comentadas y lineas en blanco
 
 ```
 sudo vi /etc/asterisk/sip.conf
@@ -290,7 +303,11 @@ sudo vi /etc/asterisk/sip.conf
 :g/^$/d
 
 ```
+
+En `sip.conf` la primera sección es `[general]` y permite definir las opciones generales de cada canal y, en consecuencia, los parámetros generales de cada cliente.
+
 El archivo se nos tiene que quedar de la siguiente forma:
+
 ```
 [general]
 context=public                  ; Default context for incoming calls. Defaults to 'default'
@@ -388,6 +405,13 @@ module load chan_sip.so
 
 Una vez echo ya podremos utilizarlos.
 
+* **sip show peers** Muestra los peers, los clientes registrados en la centralita (las extensiones). Su estado, IPs etc.
+* **sip show users** Muestra los usuarios.
+* **sip reload** Recarga la configuración de SIP.
+* **dialplan reload** Recarga el plan de marcación.
+* **core show channels** Muestra los canales de todo tipo.
+* **sip show channels** Muestra información del canal SIP.
+
 En este caso listamos las extensiones y los usuarios que hay asociados a ellas
 
 ```
@@ -402,6 +426,13 @@ ext_02/usu_ext_02         192.168.1.141                            D  Auto (No) 
 2 sip peers [Monitored: 2 online, 0 offline Unmonitored: 0 online, 0 offline]
 ```
 Por ultimo y para finalizar la configuracion tendremos que agregar los usuario a las extensiones en el archivo `/etc/asterisk/extensions.conf`, no sin antes realizar una copia de seguridad.
+
+* **Controla el dialplan de la centralita** Define cómo se comportarán las llamadas entrantes y salientes en el sistema.
+* Este fichero está compuesto por **contextos**, **extensiones** y **prioridades**.
+* **Contextos** 
+  * Cada una de las secciones en las que está dividido el dialplan.
+  * Existen 3 contextos reservados: general, global y default.
+  * Cuando una extensión, de las que hay definidas sip.conf, tiene definido un contexto (ej. context=alejandroalsa) y efectúa una llamada, empezarán a ejecutarse las líneas de código en ese contexto.
 
 ```
 sudo cp extensions.conf extensions.conf.copy
