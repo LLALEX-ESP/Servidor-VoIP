@@ -208,7 +208,7 @@ ii  asterisk-modules                              1:18.10.0~dfsg+~cs6.10.4043141
 ii  asterisk-moh-opsound-gsm                      2.03-1.1                          all          asterisk extra sound files - English/gsm
 un  asterisk-ooh323                               <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
 un  asterisk-opus                                 <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
-un  asterisk-prompt-en                            <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
+un  asterisk-prompt-en                            <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)https://github.com/alejandroalsa/Servidor-VoIP/blob/main/README.md
 un  asterisk-prompt-en-us                         <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
 un  asterisk-prompt-es                            <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
 un  asterisk-prompt-es-mx                         <ninguna>                         <ninguna>    (no hay ninguna descripción disponible)
@@ -521,7 +521,7 @@ Realizamos dos configuraciones
 * **Modificar el contexto `alejandroalsa`** Para permitir llamar al exterior desde nuestras extensiones internas.
 
 ```
-sudo nano sip.conf
+sudo nano extensions.conf
 ```
 
 ```
@@ -581,34 +581,27 @@ srvlookup=yes
 allowguest=no
 alwaysauthreject=yes
  
-register => 1234567890@trunk-netelip
+register => nombre_usuario_asignado@trunk-netelip
 register => mi_usuario@trunk-freevoipdeal
  
-[3001]
+; Extension 01
+[ext_01](usuario)
 type=peer
+username=usu_ext_01
 host=dynamic
-username=3001
-secret=password3001
+secret=usu_ext_01
+port=5061
 context=extensiones
+
  
-[trunk-netelip]
+[connection]
 type=peer
 host=sip.netelip.com
 fromdomain=sip.netelip.com
-username=1234567890
-secret=T0pS3cr3t
+username=nombre_usuario_asignado
+secret=##########
 insecure=port,invite
 context=callin-netelip
-canreinvite=no
- 
-[trunk-freevoipdeal]
-type=peer
-host=sip.freevoipdeal.com
-fromdomain=sip.freevoipdeal.com
-username=mi_usuario
-secret= T0pS3cr3t
-insecure=port,invite
-context=general
 canreinvite=no
 ```
 
@@ -623,9 +616,9 @@ sudo nano extensios.conf
 exten => _X.,1,Hangup(21)
 exten => s,1,Hangup(21)
  
-[callin-netelip]
-;Las llamadas de Netelip van al 3001
-exten => s,1,Dial(SIP/3001)
+[external_call]
+;Las llamadas de Netelip van al 01
+exten => s,1,Dial(SIP/01)
 same => n,Hangup(16)
  
 [extensiones]
@@ -634,11 +627,7 @@ include => llamadas-no-validas
  
 [llamadas-externas]
 ;Llamada a fijos de España por Netelip
-exten => _[8-9][1-8]XXXXXXX,1,Dial(SIP/${EXTEN}@trunk-netelip)
-same => n,Hangup(16)
- 
-;Llamada a móviles de España que empiezan en 6 por FreeVoIPDeal
-exten => _6XXXXXXXX,1,Dial(SIP/0034${EXTEN}@trunk-freevoipdeal)
+exten => _[8-9][1-8]XXXXXXX,1,Dial(SIP/${EXTEN}@connection)
 same => n,Hangup(16)
  
 [llamadas-no-validas]
@@ -647,8 +636,6 @@ same => n,Wait(1)
 same => n,Playback(you-dialed-wrong-number)
 same => n,Hangup(21)
 ```
-
-
 
 ### Instalacion Zoiper
 
